@@ -490,7 +490,7 @@
                 </div>
                 <div class="relative">
                     <!-- Imagen del televisor -->
-                    <img src="{{ asset('images/tv.png') }}" alt="TV FlickFlow" class="w-full h-auto" />
+                    <img src="{{ asset('images/tv.png') }}" alt="TV Laraflix" class="w-full h-auto" />
 
                     <!-- Contenedor del video -->
                     <div class="absolute inset-0 flex justify-center items-center w-[28rem] left-24 bottom-7">
