@@ -1,0 +1,195 @@
+<x-app-layout>
+    <div class="mx-32 my-4 text-white">
+        <h1 class="text-4xl font-bold">
+            @auth
+                Hello,<span class="text-[#053BA3]">{{ Auth::user()->name }}</span>!
+                <h2 class="text-md">Review or track film you’ve watched...</h2>
+            @endauth
+        </h1>
+    </div>
+    <div class="flex flex-row mx-24 gap-10">
+        <div class="relative shadow-[#032f7a] shadow-md rounded-lg">
+            <img src="{{ asset('images/banner1.png') }}" class="rounded-r-lg">
+            <div class="text-white absolute top-0 right-0 w-2/5 p-4 h-full flex flex-col justify-end rounded-r-lg"
+                style="backdrop-filter: blur(1px); background-color: rgba(0, 0, 0, 0.5);">
+                <h1 class="righteous-regular text-3xl">Black Adam</h1>
+                <p>Date Release: 21 October 2022 </p>
+                <br>
+                <p class="text-sm">5,000 years ago, Black Adam was empowered by the Egyptian gods and imprisoned. Now he
+                    is freed from
+                    his tomb and is preparing to show the world a unique approach to the fight for justice.</p>
+                <div class="flex flex-row mt-auto">
+                    <button
+                        class="bg-[#053BA3] rounded-full py-1 px-5 font-bold hover:bg-[#032f7a] transform hover:scale-110 transition-all">More
+                        Info</button>
+                    <button class="bg-[#053BA3] rounded-full p-2 ml-2 transform hover:scale-110 transition-all pepe">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-heart"
+                            width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                            fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572" />
+                        </svg>
+                    </button>
+
+                </div>
+            </div>
+        </div>
+        <div class="relative shadow-[#032f7a] shadow-md rounded-lg">
+            <img src="{{ asset('images/banner2.png') }}" class="rounded-r-lg">
+            <div class="text-white absolute top-0 right-0 w-2/5 p-4 h-full flex flex-col justify-end rounded-r-lg"
+                style="backdrop-filter: blur(1px); background-color: rgba(0, 0, 0, 0.5);">
+                <h1 class="righteous-regular text-3xl">M3GAN</h1>
+                <p>Date Release: 6 January 2023 </p>
+                <br>
+                <p class="text-sm">10-year-old Cady gets into a car accident with her mom and dad. Parents die, and the
+                    girl goes to
+                    live with Aunt Gemma. Gemma introduces Cady to an experimental android doll, M3gan, who has
+                    artificial intelligence.</p>
+                <div class="flex flex-row mt-auto">
+                    <button
+                        class="bg-[#053BA3] rounded-full py-1 px-5 font-bold hover:bg-[#032f7a]  transform hover:scale-110 transition-all">More
+                        Info</button>
+                    <button class="bg-[#053BA3] rounded-full p-2 ml-2 transform hover:scale-110 transition-all pepe">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-heart"
+                            width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                            fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="mx-32 mt-14 text-white">
+        <div class="flex flex-row">
+            <h1 class="text-2xl font-semibold">Popular Films Films Of All Time</h1>
+            <img class="ml-2 w-6 h-6" src="{{ asset('images/ellipse.png') }}">
+        </div>
+        <div class="flex flex-row my-4 gap-8">
+            @foreach ($films as $film)
+                <div class="col" ontouchstart="this.classList.toggle('hover');">
+                    <div class="container">
+                        <div class="front" style="background-image: url({{ asset($film->poster) }})">
+                            <div class="inner">
+                                <p class="font-bold uppercase">{{ $film->title }}</p>
+                                <span>{{ $film->director }} | {{ $film->release_year }}</span>
+                            </div>
+                        </div>
+                        <div class="back">
+                            <div class="inner">
+                                <p class="uppercase text-xl font-extrabold mb-4 text-[#053BA3]">
+                                    {{ $film->title }}</p>
+                                <p>{{ $film->description }}</p>
+                                <a href="{{ route('show', $film->id) }}">
+
+                                    <x-primary-button class="mt-5">
+                                        {{ __('Go To Film') }}
+                                    </x-primary-button>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+        <img src="{{ asset('images/dots.png') }}">
+    </div>
+    <div class="mx-32 mt-14 text-white">
+        <div class="flex flex-row">
+            <h1 class="text-2xl font-semibold">Most Viewed Categories</h1>
+            <img class="ml-2 w-6 h-6" src="{{ asset('images/ellipse.png') }}">
+        </div>
+        <div class="flex my-6 gap-[85px]">
+            @foreach ($genres as $genre)
+                @if ($genre !== 'Drama')
+                    <div class="w-[350px]">
+                        <div class="relative h-auto">
+                            @php
+                                $ml = 0;
+                            @endphp
+                            @foreach ($filmsByGenre[$genre]->take(4) as $film)
+                                <a href="{{ route('show', $film->id) }}">
+                                    <img src="{{ asset($film->poster) }}"
+                                        class="absolute h-[350px] w-[225px] rounded-lg z-{{ 50 - $loop->index * 10 }} ml-[{{ $ml }}px] shadow-2xl hover:scale-110 hover:z-50 transition-transform duration-300"
+                                        alt="{{ $film->title }}">
+                                </a>
+                                @php
+                                    $ml += 45;
+                                @endphp
+                            @endforeach
+                        </div>
+                        <div class="text-xl pt-[370px] flex flex-row">
+                            <h2 class="text-[#053BA3] font-semibold mr-6">{{ $genre }} Films</h2>
+                            <span class="text-base flex items-center"><svg xmlns="http://www.w3.org/2000/svg"
+                                    class="icon icon-tabler icon-tabler-heart-filled mr-1" width="24" height="24"
+                                    viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none"
+                                    stroke-linecap="round" stroke-linejoin="round">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                    <path
+                                        d="M6.979 3.074a6 6 0 0 1 4.988 1.425l.037 .033l.034 -.03a6 6 0 0 1 4.733 -1.44l.246 .036a6 6 0 0 1 3.364 10.008l-.18 .185l-.048 .041l-7.45 7.379a1 1 0 0 1 -1.313 .082l-.094 -.082l-7.493 -7.422a6 6 0 0 1 3.176 -10.215z"
+                                        stroke-width="0" fill="red" />
+                                </svg>{{ $reviewsCountByMovie[$genre] }}
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                    class="icon icon-tabler icon-tabler-message mr-1 ml-3" width="24"
+                                    height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                                    fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                    <path d="M8 9h8" />
+                                    <path d="M8 13h6" />
+                                    <path
+                                        d="M18 4a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-5l-5 3v-3h-2a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3h12z" />
+                                </svg>{{ $reviewsCountByMovie[$genre] }}
+                            </span>
+                        </div>
+
+                    </div>
+                @endif
+            @endforeach
+        </div>
+        {{-- <img src="{{ asset('images/dots.png') }}"> --}}
+    </div>
+    <div class="mx-32 mt-14 text-white">
+        <div class="flex flex-row">
+            <h1 class="text-2xl font-semibold">Latest User's Reviews</h1>
+            <img class="ml-2 w-6 h-6" src="{{ asset('images/ellipse.png') }}">
+        </div>
+        <div class="flex flex-col m-4 gap-10">
+            @foreach ($latestReviews as $review)
+                <div class="w-full h-[300px] rounded-lg flex flex-row"
+                    style="background-color: rgba(233, 166, 166, 0.05)">
+                    {{-- <img src="{{ $review->user->profile_image }}" alt="{{ $review->user->name }}"
+                        class="w-32 h-32 rounded-full"> --}}
+                    <img src="{{ $review->user->picture }}" alt="{{ $review->user->name }}"
+                        class="w-32 h-32 rounded-full mt-4 ml-4">
+                    <div class="mx-10 flex flex-col flex-grow justify-between">
+                        <div class="flex items-center mt-4">
+                            <h2 class="font-semibold text-xl">{{ $review->movie->title }}</h2>
+                            <span
+                                class="ml-3 mt-1 font-regular text-gray-400">{{ $review->movie->release_year }}</span>
+                        </div>
+                        <div class="flex items-center mt-1">
+                            <h3 class="text-gray-400">Review by <span
+                                    class="text-[#053BA3]">{{ $review->user->name }}</span></h3>
+                            <div class="flex items-center ml-2">
+                                @for ($i = 0; $i < 5; $i++)
+                                    @if ($i < $review->rating)
+                                        <svg class="w-4 h-4 text-yellow-300" aria-hidden="true"
+                                            xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                                            viewBox="0 0 22 20">
+                                            <path
+                                                d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
+                                        </svg>
+                                    @endif
+                                @endfor
+                            </div>
+                        </div>
+                        <h4 class="grow mt-3">{{ $review->comment }}</h4>
+                    </div>
+                    <img src="{{ $review->movie->poster }}" alt="{{ $review->movie->title }}"
+                        class="justify-end w-[250px] rounded-lg">
+                </div>
+            @endforeach
+        </div>
+    </div>
+</x-app-layout>

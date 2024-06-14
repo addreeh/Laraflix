@@ -1,0 +1,301 @@
+<style>
+    .follow input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+        height: 0;
+        width: 0;
+    }
+
+    .follow {
+        display: block;
+        position: relative;
+        cursor: pointer;
+        user-select: none;
+    }
+
+    .follow svg {
+        position: relative;
+        top: 0;
+        left: 0;
+        height: 50px;
+        width: 50px;
+        transition: all 0.3s;
+        fill: #666;
+    }
+
+    .follow svg:hover {
+        transform: scale(1.1) rotate(-10deg);
+    }
+
+    .follow input:checked~svg {
+        fill: #053BA3;
+    }
+
+    .unfollow input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+        height: 0;
+        width: 0;
+    }
+
+    .unfollow {
+        display: block;
+        position: relative;
+        cursor: pointer;
+        user-select: none;
+    }
+
+    .unfollow svg {
+        position: relative;
+        top: 0;
+        left: 0;
+        height: 50px;
+        width: 50px;
+        transition: all 0.3s;
+        fill: #666;
+    }
+
+    .unfollow svg:hover {
+        transform: scale(1.1) rotate(-10deg);
+    }
+
+    .unfollow input:checked~svg {
+        fill: rgb(185, 51, 51);
+    }
+</style>
+<x-app-layout>
+    <div class="relative flex flex-row items-center bg-white border border-[#053BA3] rounded-lg shadow dark:bg-gray-800  mx-auto mt-10 w-[1000px] h-[500px]"
+        style="background-color: rgba(233, 166, 166, 0.05)">
+        <img class="object-cover rounded-t-lg w-80 md:rounded-none md:rounded-s-lg h-[499px]" src="{{ $movie->poster }}"
+            alt="{{ $movie->title }}">
+        <div class="flex flex-col justify-between py-4  leading-normal">
+            <h1
+                class="px-8 righteous-regular uppercase mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                {{ $movie->title }}</h1>
+            <p class="px-8 mb-3 font-normal text-gray-700 dark:text-gray-400">{{ $movie->description }}</p>
+            <div class="px-8 flex flex-row mt-2 mb-5">
+                <div class="mt-2">
+                    <span
+                        class="text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-blue-900 dark:text-blue-300">{{ $movie->director }}</span>
+                    <span
+                        class="text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-blue-900 dark:text-blue-300">{{ $movie->genre }}</span>
+                    <span
+                        class="text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-blue-900 dark:text-blue-300">{{ $movie->release_year }}</span>
+                </div>
+                <div class="flex ml-10">
+                    <div class="flex space-x-1 rtl:space-x-reverse -mt-2">
+                        @for ($i = 0; $i < 5; $i++)
+                            @if ($i < $averageRating)
+                                <svg class="w-4 text-yellow-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                    fill="currentColor" viewBox="0 0 22 20">
+                                    <path
+                                        d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
+                                </svg>
+                            @else
+                                <svg class="w-4 text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                    fill="currentColor" viewBox="0 0 22 20">
+                                    <path
+                                        d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
+                                </svg>
+                            @endif
+                        @endfor
+
+                    </div>
+                    <span
+                        class="text-xs font-semibold px-2.5 py-0.5 rounded dark:bg-blue-200 dark:text-blue-800 ml-4 h-6 mt-2">{{ $averageRating }}</span>
+                </div>
+                <div class="flex flex-row ml-20 mt-2">
+                    @if (in_array($movie->id, $userFollows))
+                        {{-- <livewire:unfollow-movie-component :movie="$movie" /> --}}
+
+                        <form action="{{ url('/films/unfollow/' . $movie->id) }}" method="POST"
+                            href="{{ route('unfollow') }}" class="m-0">
+                            @csrf
+                            @method('PUT')
+                            <div class="relative">
+                                <button data-tooltip-target="tooltip-unfollow" type="submit">
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                        class="icon icon-tabler icon-tabler-heart-filled" width="24" height="24"
+                                        viewBox="0 0 24 24" stroke-width="1.5" stroke="red" fill="none"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                        <path
+                                            d="M6.979 3.074a6 6 0 0 1 4.988 1.425l.037 .033l.034 -.03a6 6 0 0 1 4.733 -1.44l.246 .036a6 6 0 0 1 3.364 10.008l-.18 .185l-.048 .041l-7.45 7.379a1 1 0 0 1 -1.313 .082l-.094 -.082l-7.493 -7.422a6 6 0 0 1 3.176 -10.215z"
+                                            stroke-width="0" fill="red" />
+                                    </svg>
+                                </button>
+                                <div id="tooltip-unfollow" role="tooltip"
+                                    class="absolute z-10 invisible -top-10 left-0 transform -translate-x-1/2 px-3 py-2 text-sm font-medium transition-opacity duration-300 rounded-lg shadow-sm opacity-0 tooltip bg-blue-900 text-blue-300">
+                                    Unfollow?
+                                    <div class="tooltip-arrow" data-popper-arrow></div>
+                                </div>
+                            </div>
+                        </form>
+                    @else
+                        {{-- <livewire:follow-movie-component :movie="$movie" /> --}}
+                        <form action="{{ url('/films/follow/' . $movie->id) }}" method="POST"
+                            href="{{ route('follow') }}">
+                            @csrf
+                            @method('PUT')
+                            <div class="relative">
+                                <button data-tooltip-target="tooltip-follow" type="submit">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-heart"
+                                        width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5"
+                                        stroke="red" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                        <path
+                                            d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572" />
+                                    </svg>
+                                </button>
+                                <div id="tooltip-follow" role="tooltip"
+                                    class="absolute z-10 invisible -top-10 left-0 transform -translate-x-1/2 px-3 py-2 text-sm font-medium transition-opacity duration-300 rounded-lg shadow-sm opacity-0 tooltip bg-blue-900 text-blue-300">
+                                    Follow?
+                                    <div class="tooltip-arrow" data-popper-arrow></div>
+                                </div>
+                            </div>
+                        </form>
+                    @endif
+                    @if (in_array($movie->id, $userViews))
+                        <form action="{{ url('/films/unwatched/' . $movie->id) }}" method="POST"
+                            href="{{ route('unwatched') }}">
+                            @csrf
+                            @method('PUT')
+                            <div class="relative ml-6">
+                                <button data-tooltip-target="tooltip-unwatched" type="submit">
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                        class="icon icon-tabler icon-tabler-eye-filled" width="24" height="24"
+                                        viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                        <path
+                                            d="M12 4c4.29 0 7.863 2.429 10.665 7.154l.22 .379l.045 .1l.03 .083l.014 .055l.014 .082l.011 .1v.11l-.014 .111a.992 .992 0 0 1 -.026 .11l-.039 .108l-.036 .075l-.016 .03c-2.764 4.836 -6.3 7.38 -10.555 7.499l-.313 .004c-4.396 0 -8.037 -2.549 -10.868 -7.504a1 1 0 0 1 0 -.992c2.831 -4.955 6.472 -7.504 10.868 -7.504zm0 5a3 3 0 1 0 0 6a3 3 0 0 0 0 -6z"
+                                            stroke-width="0" fill="white" />
+                                    </svg>
+                                </button>
+                                <div id="tooltip-unwatched" role="tooltip"
+                                    class="absolute z-10 invisible -top-10 left-0 transform -translate-x-1/2 px-3 py-2 text-sm font-medium transition-opacity duration-300 rounded-lg shadow-sm opacity-0 tooltip bg-blue-900 text-blue-300">
+                                    Unwatched?
+                                    <div class="tooltip-arrow" data-popper-arrow></div>
+                                </div>
+                            </div>
+                        </form>
+                    @else
+                        <form action="{{ url('/films/watched/' . $movie->id) }}" method="POST"
+                            href="{{ route('watched') }}">
+                            @csrf
+                            @method('PUT')
+                            <div class="relative ml-6">
+                                <button data-tooltip-target="tooltip-watched" type="submit">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-eye"
+                                        width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5"
+                                        stroke="white" fill="none" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                        <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+                                        <path
+                                            d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" />
+                                    </svg>
+                                </button>
+                                <div id="tooltip-watched" role="tooltip"
+                                    class="absolute z-10 invisible -top-10 left-0 transform -translate-x-1/2 px-3 py-2 text-sm font-medium transition-opacity duration-300  rounded-lg shadow-sm opacity-0 tooltip bg-blue-900 text-blue-300">
+                                    Watched?
+                                    <div class="tooltip-arrow" data-popper-arrow></div>
+                                </div>
+                            </div>
+
+                        </form>
+                    @endif
+                </div>
+            </div>
+            <div class="px-8 flex flex-row mb-10 gap-10">
+
+                @foreach ($reviews as $review)
+                    <div class="flex items-start gap-2.5">
+                        <img class="h-8 rounded-full" src="{{ asset($review->user->picture) }}"
+                            alt="{{ $review->user->name }} {{ $review->user->surname }}">
+                        <div
+                            class="flex flex-col w-full max-w-[320px] leading-1.5 p-4 border-gray-200 rounded-e-xl rounded-es-xl bg-gray-700">
+                            <div class="flex items-center space-x-2 rtl:space-x-reverse">
+                                <span class="text-sm font-semibold text-white">{{ $review->user->username }}</span>
+                                <span
+                                    class="text-sm font-normal text-gray-500 dark:text-gray-400">{{ $review->created_at->format('d/m/Y') }}</span>
+                            </div>
+                            <p class="text-sm font-normal py-2.5 text-white">{{ $review->comment }}
+                            </p>
+                            {{-- <span class="text-sm font-normal text-gray-400">{{ $review->rating }}</span> --}}
+                            <div class="flex space-x-1 rtl:space-x-reverse mt-2">
+                                @for ($i = 0; $i < 5; $i++)
+                                    @if ($i < $review->rating)
+                                        <svg class="w-4 text-yellow-300" aria-hidden="true"
+                                            xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                                            viewBox="0 0 22 20">
+                                            <path
+                                                d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
+                                        </svg>
+                                    @else
+                                        <svg class="w-4 text-gray-600" aria-hidden="true"
+                                            xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                                            viewBox="0 0 22 20">
+                                            <path
+                                                d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
+                                        </svg>
+                                    @endif
+                                @endfor
+
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+            <div class="absolute w-[680px] -bottom-4">
+                <form action="{{ url('/films/review') }}" method="POST" href="{{ route('review') }}">
+                    @csrf
+                    <!-- Añadir un campo de token CSRF para protección contra ataques de falsificación de solicitudes entre sitios -->
+                    <label for="chat" class="sr-only">Your comment</label>
+                    <div class="mt-10 flex items-center px-3 py-2 rounded-lg bg-gray-50 dark:bg-gray-700">
+                        <input type="hidden" name="movie_id" value="{{ $movie->id }}">
+                        <select name="rating"
+                            class="text-sm rounded-lg  block p-2.5 bg-gray-700 border-gray-600 dark:placeholder-gray-400 text-white">
+                            @for ($i = 1; $i <= 5; $i++)
+                                <option value="{{ $i }}">{{ $i }} ⭐️</option>
+                            @endfor
+                        </select>
+                        <textarea id="chat" name="comment" rows="1"
+                            class="block mx-4 p-2.5 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            placeholder="Your comment..."></textarea>
+                        <button type="submit"
+                            class="inline-flex justify-center p-2 text-blue-600 rounded-full cursor-pointer hover:bg-blue-100 dark:text-blue-500 dark:hover:bg-gray-600">
+                            <svg class="w-5 h-5 rotate-90 rtl:-rotate-90" aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 20">
+                                <path
+                                    d="m17.914 18.594-8-18a1 1 0 0 0-1.828 0l-8 18a1 1 0 0 0 1.157 1.376L8 18.281V9a1 1 0 0 1 2 0v9.281l6.758 1.689a1 1 0 0 0 1.156-1.376Z" />
+                            </svg>
+                            <span class="sr-only">Send comment</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="mx-auto mt-10 flex justify-center"> <!-- Agrega las clases mx-auto y flex justify-center aquí -->
+        @if (session('msg') == 1)
+            <x-toast-success>Film Followed.</x-toast-success>
+        @endif
+        @if (session('msg') == 3)
+            <x-toast-success>Film Watched.</x-toast-success>
+        @endif
+        @if (session('msg') == 5)
+            <x-toast-success>Review added.</x-toast-success>
+        @endif
+
+        @if (session('msg') == 2)
+            <x-toast-danger>Film Unfollowed.</x-toast-danger>
+        @endif
+        @if (session('msg') == 4)
+            <x-toast-danger>Film Unwatched.</x-toast-danger>
+        @endif
+    </div>
+
+</x-app-layout>

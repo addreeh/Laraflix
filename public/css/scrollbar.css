@@ -1,0 +1,18 @@
+/* Ocultar el scrollbar nativo en todos los navegadores */
+*::-webkit-scrollbar {
+    width: 0.5em;
+}
+
+/* Estilos personalizados para el scrollbar */
+*::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: #E6030C;
+    border-radius: 10px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
+}

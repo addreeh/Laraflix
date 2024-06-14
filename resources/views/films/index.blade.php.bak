@@ -1,0 +1,30 @@
+<x-app-layout>
+    <div class="my-10 mx-24 text-white">
+        <div class="flex flex-row mb-6">
+            <h1 class="text-2xl font-semibold">Explore our full catalogue</h1>
+            <img class="ml-2 w-6 h-6" src="{{ asset('images/ellipse.png') }}">
+        </div>
+        <div class="grid auto-rows-[500px] grid-cols-3 gap-4">
+            @foreach ($films as $index => $film)
+                <div key="{{ $index }}"
+                    class="relative rounded-xl border-2 border-slate-400/10 bg-neutral-100 dark:bg-neutral-900 {{ strlen($film->title) > 15 ? 'col-span-2' : '' }} flex flex-col justify-end">
+                    <img src="{{ $film->poster }}" alt="{{ $film->title }}" class="object-auto w-full h-full rounded-xl">
+                    <div
+                        class="absolute inset-x-0 bottom-0 bg-gray-900 bg-opacity-75 p-4 flex justify-between items-center">
+                        <div class="flex flex-col">
+                            <h2 class="righteous-regular uppercase text-lg font-bold">{{ $film->title }}</h2>
+                            <p class="text-white">{{ $film->release_year }}</p>
+                        </div>
+                        <div>
+                            <a href="{{ route('show', $film->id) }}">
+                                <button
+                                    class="bg-[#053BA3] text-white rounded-full py-1 px-5 font-bold hover:bg-[#032f7a] transform hover:scale-110 transition-all">More
+                                    Info</button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    </div>
+</x-app-layout>
